@@ -1,4 +1,9 @@
 
 <div class="container">
-    <h1>Hello, Fellow Kids</h1>
+    <h1>Bones Fan Page</h1>
+    $if session['user'] == None:
+        <h3>Hello Bones Fan!</h3>
+    $else:
+        <h3>Hello $session['user']['name']</h3>
+    <img src ="https://vignette.wikia.nocookie.net/animalcrossing/images/9/91/NH-Bones_poster.png/revision/latest/scale-to-width-down/340?cb=20200522023638" alt ="Bones">
 </div>

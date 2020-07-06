@@ -26,10 +26,13 @@ $var js: static/js/bootstrap.min.js static/js/jquery-3.5.1.min.js static/js/boot
             </ul>
 
             <div class="pull-right">
-                <a href="/register"class ="btn btn-raised btn-default waves-effect">Register</a>&nbsp; &nbsp;
+                $if session['user'] == None:
+                    <a href="/login" class ="btn btn-link btn-default waves-effect">Login</a>&nbsp; &nbsp;
+                    <a href="/register"class ="btn btn-raised btn-default waves-effect">Register</a>&nbsp; &nbsp;
+                $else:
+                    <a id="logout-link"class ="btn btn-raised btn-default waves-effect">Logout</a>&nbsp; &nbsp;
             </div>
         </div>
-<br /><br /><br />
         $:page
     </div>
 
