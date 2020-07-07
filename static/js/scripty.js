@@ -17,19 +17,19 @@ $(document).ready(function(){
         });
 
     $(document).on('submit','#login-form',function(e){
-        e.preventDefault();
+        e.preventDefault()
 
-        var form =$(this).serialize();
+        var form =$(this).serialize()
         $.ajax({
             url: '/check-login',
             type: 'POST',
             data: form,
             success: function(res){
                 if (res== "error"){
-                    alert("Could not log in.");
+                    alert("Could not log in.")
                 }else{
-                    console.log("Logged in as", res);
-                    window.location.href = "/";
+                    console.log("Logged in as", res)
+                    window.location.href = "/"
                     }
             }
 
@@ -37,7 +37,7 @@ $(document).ready(function(){
     )};
 
     $(document).on('click','#logout-link',function(e)){
-        e.preventDefault();
+        e.preventDefault()
         $.ajax({
             url: '/logout',
             type: 'GET',
@@ -48,5 +48,31 @@ $(document).ready(function(){
                 alert("Something went wrong.")
             }
         })
+    });
+
+    $(document).on('submit','#post-activity',function(e)){
+        e.preventDefault()
+        var form = $(this).serialize()
+        $.ajax({
+            url: '/post-activity',
+            type: 'POST',
+            data: form,
+            success: function(response){
+                console.log(response)
+            }
+        })
+    $(document).on('submit','#settings-form',function(e)){
+        e.preventDefault()
+        var form = $(this).serialize()
+        $.ajax({
+            url: '/update-settings',
+            type: 'POST',
+            data: form,
+            success: function(response){
+                if(response == "success"){
+                    window.location.href = window.location.href
+                }else{
+                    alert(response)
+                }
     });
 });
