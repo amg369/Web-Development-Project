@@ -1,6 +1,6 @@
 import cheroot
 from webpy import web
-from Models import RegisterModel, LoginModel
+from Models import RegisterModel, LoginModel, Posts
 from pymongo import MongoClient
 
 web.config.debug = False
@@ -11,7 +11,12 @@ urls = (
     '/login', 'Login',
     '/logout', 'Logout',
     '/postregistration', 'PostRegistration',
-    '/check-login', 'CheckLogin'
+    '/check-login', 'CheckLogin',
+    '/discover', 'Discover',
+    '/post-activity', 'PostActivity',
+    '/settings', 'UserSettings',
+    '/update-settings', 'UpdateSettings',
+    '/profile/(.*)', 'UserProfile'
 )
 
 app = web.application(urls, globals())
@@ -25,7 +30,22 @@ render = web.template.render("Views/Templates", base="MainLayout",
 # Classes/Routes
 class Home:
     def GET(self):
-        return render.Home()
+        data = type('obj', (object,), {"username": "ali1", "password": "bones"})
+
+        login = LoginModel.LoginModel()
+        isCorrect = login.check_user(data)
+
+        if isCorrect:
+            session_data["user"] = isCorrect
+
+        post_model = Posts.Posts()
+        posts = post_model.get_all_posts()
+        return render.Home(posts)
+
+
+class Discover:
+    def GET(self):
+        return render.Discover()
 
 
 class Register:
@@ -50,6 +70,14 @@ class CheckLogin:
 
         return "error"
 
+class PostActivity:
+    def POST(self):
+        data = web.input()
+        data.username = session_data['user']['username']
+
+        post_model = Posts.Posts()
+        post_model.insert_post(data)
+        return "success"
 
 class PostRegistration:
     def POST(self):
@@ -59,10 +87,22 @@ class PostRegistration:
 
         return data.username
 
+class UpdateSettings:
+    def POST(self):
+        data = web.input()
+        data.username = session_data["user"]["username"]
+        settings_model = LoginModel.LoginModel()
+        if settings_model.update_info(data):
+            return "success"
+        else:
+            return "An error occurred"
+
+
+
 
 class Logout:
     def GET(self):
-        session['user'] == None
+        session['user'] = None
         session_data['user'] = None
         session.kill()
         return "success"
